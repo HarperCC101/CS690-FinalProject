@@ -68,6 +68,8 @@ namespace BudgetTrackerApp {
                     using (var cmd = new SQLiteCommand(query, conn)) {
                         cmd.Parameters.AddWithValue("@amount", amountSpent);
                         cmd.Parameters.AddWithValue("@category", categoryName);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        Console.WriteLine($"Rows Affected: {rowsAffected}"); // Debug output
                     }
                 } catch (SQLiteException ex) {
                     Console.WriteLine($"Database Error: {ex.Message}");
