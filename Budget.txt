@@ -1,0 +1,5 @@
+Groceries,220,0
+Utilities,200,0
+Entertainment,200,0
+Transportation,200,0
+Miscellaneous,200,0
