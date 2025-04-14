@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\my-budget-app\my-budget-app.csproj" />
+    <ProjectReference Include="..\BudgetApp\my-budget-app.csproj" />
   </ItemGroup>
 
 </Project>
