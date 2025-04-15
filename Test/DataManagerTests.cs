@@ -1,4 +1,5 @@
 // DataManagerTests.cs
+// Arrange-Act-Assert (AAA) Pattern Unit Testing
 using BudgetTrackerApp;
 using Xunit;
 using System.IO;
@@ -14,14 +15,15 @@ public class DataManagerTests {
         }
     }
 
+    // Does txt file exist? If not, is txt file created?
     [Fact]
     public void DataManager_InitializesFileIfNoFile() {
         // Arrange
-        string TempTestFilePath = "TempTestBudgetDM.txt"; // Create a temporary file path
+        string TempTestFilePath = "TempTestBudgetDM.txt"; // Create temporary txt file
         if (File.Exists(TempTestFilePath)) {
             File.Delete(TempTestFilePath);
         }
-        DataManager dataManager = new DataManager(TempTestFilePath); // Use the temporary file path
+        DataManager dataManager = new DataManager(TempTestFilePath); // Use temporary txt file path
 
         // Act & Assert
         Assert.True(File.Exists(TempTestFilePath));
@@ -32,8 +34,9 @@ public class DataManagerTests {
         File.Delete(TempTestFilePath);
     }
 
+    // Is data loaded from txt file?
     [Fact]
-    public void DataManager_LoadsCategoriesCorrectly() {
+    public void DataManager_LoadsCategories() {
         // Arrange
         File.WriteAllLines(TestFilePath, new[] { "Groceries,100,50", "Entertainment,200,100" });
         DataManager dataManager = new DataManager(TestFilePath);
@@ -47,8 +50,9 @@ public class DataManagerTests {
         Assert.Equal((200, 100), categories["Entertainment"]);
     }
 
+    // Is category spent amount updated?
     [Fact]
-    public void DataManager_UpdatesSpentAmountCorrectly() {
+    public void DataManager_UpdatesSpentAmount() {
         // Arrange
         File.WriteAllLines(TestFilePath, new[] { "Groceries,100,50" });
         DataManager dataManager = new DataManager(TestFilePath);
@@ -61,8 +65,9 @@ public class DataManagerTests {
         Assert.Equal(75, categories["Groceries"].spent);
     }
 
+    // Is category spending limit updated?
     [Fact]
-    public void DataManager_UpdatesSpentLimitCorrectly() {
+    public void DataManager_UpdatesSpentLimit() {
         // Arrange
         File.WriteAllLines(TestFilePath, new[] { "Groceries,100,50" });
         DataManager dataManager = new DataManager(TestFilePath);
@@ -75,6 +80,7 @@ public class DataManagerTests {
         Assert.Equal(150, categories["Groceries"].limit);
     }
 
+    // Does UpdateData handle invalid inputs (negative or zero)?
     [Fact]
     public void DataManager_UpdateData_InvalidAmount() {
         // Arrange
@@ -90,8 +96,9 @@ public class DataManagerTests {
         Assert.Equal(50, categories["Groceries"].spent); // Should remain unchanged
     }
 
+    // Does UpdateData actually update txt file?
     [Fact]
-    public void DataManager_UpdatesPersistToFile() {
+    public void DataManager_UpdatesToFile() {
         // Arrange
         File.WriteAllLines(TestFilePath, new[] { "Groceries,100,50" });
         DataManager dataManager = new DataManager(TestFilePath);
@@ -106,6 +113,7 @@ public class DataManagerTests {
         Assert.Equal(75, categories["Groceries"].spent);
     }
 
+    // Does SetSpendingLimit handle invalid inputs (negative or zero)?
     [Fact]
     public void DataManager_SetSpendingLimit_InvalidLimit() {
         // Arrange
@@ -121,8 +129,9 @@ public class DataManagerTests {
         Assert.Equal(100, categories["Groceries"].limit); // Should remain unchanged
     }
 
+    // Does the category name list get category names from  txt file?
     [Fact]
-    public void DataManager_GetCategoriesFromFileCorrectly() {
+    public void DataManager_GetCategoriesFromFile() {
         // Arrange
         File.WriteAllLines(TestFilePath, new[] { "Groceries,100,50", "Entertainment,200,100" });
         DataManager dataManager = new DataManager(TestFilePath);
