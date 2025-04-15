@@ -3,7 +3,6 @@ using BudgetTrackerApp;
 using Xunit;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 
 public class DataManagerTests {
     private const string TestFilePath = "TestBudgetDM.txt";
@@ -13,6 +12,24 @@ public class DataManagerTests {
         if (File.Exists(TestFilePath)) {
             File.Delete(TestFilePath);
         }
+    }
+
+    [Fact]
+    public void DataManager_InitializesFileIfNoFile() {
+        // Arrange
+        string TempTestFilePath = "TempTestBudgetDM.txt"; // Create a temporary file path
+        if (File.Exists(TempTestFilePath)) {
+            File.Delete(TempTestFilePath);
+        }
+        DataManager dataManager = new DataManager(TempTestFilePath); // Use the temporary file path
+
+        // Act & Assert
+        Assert.True(File.Exists(TempTestFilePath));
+        string fileContent = File.ReadAllText(TempTestFilePath);
+        Assert.Equal("Groceries,200,0\nUtilities,200,0\nEntertainment,200,0\nTransportation,200,0\nMiscellaneous,200,0\n", fileContent);
+
+        //Cleanup
+        File.Delete(TempTestFilePath);
     }
 
     [Fact]
@@ -56,6 +73,52 @@ public class DataManagerTests {
 
         // Assert
         Assert.Equal(150, categories["Groceries"].limit);
+    }
+
+    [Fact]
+    public void DataManager_UpdateData_InvalidAmount() {
+        // Arrange
+        File.WriteAllLines(TestFilePath, new[] { "Groceries,100,50" });
+        DataManager dataManager = new DataManager(TestFilePath);
+
+        // Act
+        dataManager.UpdateData("Groceries", -10);
+        dataManager.UpdateData("Groceries", 0);
+        Dictionary<string, (double limit, double spent)> categories = dataManager.GetAllCategories();
+
+        // Assert
+        Assert.Equal(50, categories["Groceries"].spent); // Should remain unchanged
+    }
+
+    [Fact]
+    public void DataManager_UpdatesPersistToFile() {
+        // Arrange
+        File.WriteAllLines(TestFilePath, new[] { "Groceries,100,50" });
+        DataManager dataManager = new DataManager(TestFilePath);
+
+        // Act
+        dataManager.UpdateData("Groceries", 25);
+        dataManager = new DataManager(TestFilePath); // Re-load from file
+
+        Dictionary<string, (double limit, double spent)> categories = dataManager.GetAllCategories();
+
+        // Assert
+        Assert.Equal(75, categories["Groceries"].spent);
+    }
+
+    [Fact]
+    public void DataManager_SetSpendingLimit_InvalidLimit() {
+        // Arrange
+        File.WriteAllLines(TestFilePath, new[] { "Groceries,100,50" });
+        DataManager dataManager = new DataManager(TestFilePath);
+
+        // Act
+        dataManager.SetSpendingLimit("Groceries", -10);
+        dataManager.SetSpendingLimit("Groceries", 0);
+        Dictionary<string, (double limit, double spent)> categories = dataManager.GetAllCategories();
+
+        // Assert
+        Assert.Equal(100, categories["Groceries"].limit); // Should remain unchanged
     }
 
     [Fact]
