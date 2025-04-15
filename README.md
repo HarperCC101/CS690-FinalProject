@@ -20,7 +20,7 @@ This document outlines the steps to deploy and run Aria's Budget Tracker applica
     * **Command Line:** Use `unzip my-budget-app.zip` in the terminal where you downloaded the file. The contents will display in the current directory.
     * **Coursera-provided VS Code:**
         * Open the **File Explorer** (usually the top icon on the left sidebar).
-        * **Right-click** in an empty area of the File Explorer where you want to upload the zip file.
+        * **Right-click** in an empty area or on a folder in the File Explorer where you want to upload the zip file.
         * Select **"Upload..."** from the context menu.
         * Choose the `my-budget-app.zip` file that you downloaded to your local machine.
         * Once the upload is complete, the `my-budget-app.zip` file will appear in your File Explorer.
